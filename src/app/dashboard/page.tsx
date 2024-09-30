@@ -1,6 +1,9 @@
+"use client"
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import useDashboardStore from './dashboard.store';
 
 export default function Dashboard() {
+    const {user} = useDashboardStore()
     return (
         <>
             <Flex justifyContent='center' style={{ flex: 1, marginTop: 50, marginBottom: 34 }}>
@@ -11,7 +14,7 @@ export default function Dashboard() {
                             <Image src='./assets/svgs/coin.svg' />
                             <Text fontSize='sm'>Wallet Balance</Text>
                         </Flex>
-                        <Text fontSize='4xl' style={{ textAlign: 'center', lineHeight: '50px', fontWeight: 700 }}>1,200</Text>
+                        <Text fontSize='4xl' style={{ textAlign: 'center', lineHeight: '50px', fontWeight: 700 }}>{Math.round(user?.total_balance)}</Text>
                         <Text fontSize='xl' style={{ textAlign: 'center', lineHeight: '24px', width: '80%' }}>Your LIFE is growing!</Text>
                     </Flex>
                 </Flex>
