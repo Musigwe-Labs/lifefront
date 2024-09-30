@@ -4,6 +4,7 @@
 // import "./globals.css";
 import { Box, ChakraProvider, Flex } from "@chakra-ui/react";
 import { theme } from "../constants/theme";
+import { CounterStoreProvider } from "../../counterStoreProvider";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -29,11 +30,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ChakraProvider theme={theme}>
-          <Flex padding={"0 32px"} style={{ height: '100vh' }}>
-            {children}
-          </Flex>
-        </ChakraProvider>
+        <CounterStoreProvider>
+          <ChakraProvider theme={theme}>
+            <Flex padding={"0 32px"} style={{ height: '100vh' }}>
+              {children}
+            </Flex>
+          </ChakraProvider>
+        </CounterStoreProvider>
       </body>
     </html>
   );

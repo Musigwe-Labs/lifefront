@@ -1,11 +1,9 @@
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import useDashboardStore from '../dashboard.store';
+"use client"
+import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useCounterStore } from '../../../../counterStoreProvider';
 
 export default function Dashboard() {
-    const {user} = useDashboardStore()
-
-    console.log('user is ', user);
-    
+    const {user} = useCounterStore((state) => state)
 
     return (
         <>

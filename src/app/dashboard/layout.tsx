@@ -2,11 +2,11 @@
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import useDashboardStore from './dashboard.store';
+import { useCounterStore } from '../../../counterStoreProvider';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter()
-    const { user, setUser } = useDashboardStore()
+    const { setUser, user } = useCounterStore((state) => state)
 
     useEffect(() => {
         const requestOptions: RequestInit = {

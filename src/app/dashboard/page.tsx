@@ -1,9 +1,9 @@
 "use client"
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import useDashboardStore from './dashboard.store';
+import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useCounterStore } from '../../../counterStoreProvider';
 
 export default function Dashboard() {
-    const {user} = useDashboardStore()
+    const {user} = useCounterStore((state) => state)
     return (
         <>
             <Flex justifyContent='center' style={{ flex: 1, marginTop: 50, marginBottom: 34 }}>

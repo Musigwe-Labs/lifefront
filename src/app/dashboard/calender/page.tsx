@@ -1,9 +1,9 @@
 "use client"
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import useDashboardStore from '../dashboard.store';
+import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useCounterStore } from '../../../../counterStoreProvider';
 
 export default function Dashboard() {
-    const {user} = useDashboardStore()
+    const { user } = useCounterStore((state) => state)
     return (
         <>
             <Flex justifyContent='center' style={{ flex: 1, marginTop: 50, marginBottom: 34 }}>
@@ -21,17 +21,17 @@ export default function Dashboard() {
             </Flex>
             <Flex flexDir='row' style={{ borderRadius: 16, border: '1px solid #FFFFFF3D', padding: "16px 24px", gap: 8, alignItems: 'center', background: 'linear-gradient(97.25deg, #B065FB 0.33%, rgba(26, 26, 26, 0.08) 69.95%)' }}>
                 <Flex flexDir='column' gap={1}>
-                <Text fontWeight={600} fontSize='2xl'>Tasks for you</Text>
-                <Text fontSize='md' >Complete these objectives and achieve coins</Text>
-                <Button onClick={() => location.href = "/dashboard/calender/tasks"} size='md' color='purple.100' style={{ borderRadius: 32, width: '80%', background: 'white' }}>View tasks</Button>
+                    <Text fontWeight={600} fontSize='2xl'>Tasks for you</Text>
+                    <Text fontSize='md' >Complete these objectives and achieve coins</Text>
+                    <Button onClick={() => location.href = "/dashboard/calender/tasks"} size='md' color='purple.100' style={{ borderRadius: 32, width: '80%', background: 'white' }}>View tasks</Button>
                 </Flex>
                 <Image src='../assets/padlock.png' />
             </Flex>
             <Flex flexDir='row' style={{ marginTop: 24, borderRadius: 16, border: '1px solid #FFFFFF3D', padding: "16px 24px", gap: 8, alignItems: 'center', background: 'linear-gradient(97.25deg, #ED2400 0.33%, rgba(26, 26, 26, 0.08) 69.95%)' }}>
                 <Flex flexDir='column' gap={1}>
-                <Text fontWeight={600} fontSize='2xl'>Live your life</Text>
-                <Text fontSize='md' >Complete these objectives and achieve coins</Text>
-                <Button size='md' color='purple.100' style={{ borderRadius: 32, width: '80%', background: 'white' }}>View tasks</Button>
+                    <Text fontWeight={600} fontSize='2xl'>Live your life</Text>
+                    <Text fontSize='md' >Complete these objectives and achieve coins</Text>
+                    <Button size='md' color='purple.100' style={{ borderRadius: 32, width: '80%', background: 'white' }}>View tasks</Button>
                 </Flex>
                 <Image src='../assets/padlock.png' />
             </Flex>
