@@ -25,12 +25,13 @@ export default function Tasks() {
                 const newTime = prev[taskId] - 1;
                 if (newTime <= 0) {
                     clearInterval(interval);
-                    claimReward(); // Automatically call the reward function
+                    claimReward(+taskId); // Automatically call the reward function
                     return { ...prev, [taskId]: 0 };
                 }
                 return { ...prev, [taskId]: newTime };
             });
         }, 1000);
+
     };
 
     const formatCountdown = (totalSeconds: number) => {
@@ -40,8 +41,16 @@ export default function Tasks() {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    const claimReward = () => {
-        console.log("claim reward");
+    const claimReward = (taskId: number) => {
+        const requestOptions:RequestInit = {
+            method: "POST",
+            redirect: "follow"
+          };
+          
+          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/start/?user_id=1&activity_id=${taskId}`, requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.error(error));
         // You can add additional logic here, such as API calls to claim the reward
     };
 
@@ -69,9 +78,10 @@ export default function Tasks() {
                     <Button 
                         size='xs' 
                         style={{ width: '30%', height: '100%' }} 
-                        onClick={remainingTimes[task.id] === 0 ? claimReward : () => startCountdown(task.id, task.time_allocated)}
+                        disabled={remainingTimes[task.id] !== undefined ? (remainingTimes[task.id] === 0 ? true : false) : false}
+                        onClick={remainingTimes[task.id] === 0 ? () => console.log("You've added tasks already.") : () => startCountdown(task.id, task.time_allocated)}
                     >
-                        {remainingTimes[task.id] !== undefined ? (remainingTimes[task.id] === 0 ? "Claim" : formatCountdown(remainingTimes[task.id])) : "Go"}
+                        {remainingTimes[task.id] !== undefined ? (remainingTimes[task.id] === 0 ? "Added" : formatCountdown(remainingTimes[task.id])) : "Go"}
                     </Button>
                 </Flex>
             ))}
