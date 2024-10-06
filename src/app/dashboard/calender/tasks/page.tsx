@@ -25,6 +25,7 @@ export default function Tasks() {
                 const newTime = prev[taskId] - 1;
                 if (newTime <= 0) {
                     clearInterval(interval);
+                    claimReward(); // Automatically call the reward function
                     return { ...prev, [taskId]: 0 };
                 }
                 return { ...prev, [taskId]: newTime };
@@ -41,6 +42,7 @@ export default function Tasks() {
 
     const claimReward = () => {
         console.log("claim reward");
+        // You can add additional logic here, such as API calls to claim the reward
     };
 
     return (
