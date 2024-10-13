@@ -5,6 +5,9 @@
 import { Box, ChakraProvider, Flex } from "@chakra-ui/react";
 import { theme } from "../constants/theme";
 import { CounterStoreProvider } from "../../counterStoreProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -30,13 +33,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CounterStoreProvider>
-          <ChakraProvider theme={theme}>
-            <Flex padding={"0 32px"} style={{ height: '100vh' }}>
-              {children}
-            </Flex>
-          </ChakraProvider>
-        </CounterStoreProvider>
+        <TonConnectUIProvider manifestUrl="http://localhost:3000" >
+          <CounterStoreProvider>
+            <ChakraProvider theme={theme}>
+              <Flex padding={"0 32px"} style={{ height: '100vh' }}>
+                {children}
+              </Flex>
+              <ToastContainer />
+            </ChakraProvider>
+          </CounterStoreProvider>
+        </TonConnectUIProvider>
       </body>
     </html>
   );

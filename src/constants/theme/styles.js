@@ -9,7 +9,7 @@ export const styles = {
         '#root': {
             overflowX: 'hidden'
         },
-        '*': {
+        'p': {
             // border: '1px solid red',
             // fontFamily: 'Satoshi, Arial, Helvetica, sans-serif',
             color: 'white'

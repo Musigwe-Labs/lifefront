@@ -1,6 +1,7 @@
 "use client"
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function Dashboard() {
     const [charities, setCharities] = useState<any[]>()
@@ -20,8 +21,8 @@ export default function Dashboard() {
 
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/donate/?user_id=1&charity_id=${charity_id}&amount=${amount}`, requestOptions)
             .then((response) => response.json())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
+            .then((result) => toast.error(result.error))
+            .catch((error) => toast.error(error.error));
     }
 
     return (
@@ -46,7 +47,7 @@ export default function Dashboard() {
             </Flex>
 
             <Flex style={{ flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                {charities?.map((charity) => <Flex bgSize='cover' bgImage="url('../assets/donate1.png')" style={{ flexDirection: 'column', width: '49%', padding: "100px 16px 16px 16px", marginTop: '24px', borderRadius: 16 }} >
+                {charities?.map((charity, idx) => <Flex key={idx} bgSize='cover' bgImage="url('../assets/donate1.png')" style={{ flexDirection: 'column', width: '49%', padding: "100px 16px 16px 16px", marginTop: '24px', borderRadius: 16 }} >
                     <Text fontWeight={600} fontSize='md' lineHeight="20px">{charity.name}</Text>
                     <Text fontSize='xs' color='#FFF176' >Total Amount Donated: {charity.amount_donated}</Text>
                     <Button size='sm' onClick={() => donateClick(charity.id, charity.amount_donated)}>Donate now</Button>

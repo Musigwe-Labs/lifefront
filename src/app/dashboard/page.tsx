@@ -2,27 +2,52 @@
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useCounterStore } from '../../../counterStoreProvider';
 import { formatBalance } from '@/constants/utils/formatBalance';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { format } from 'date-fns';  // For formatting the date/time
 
 export default function Dashboard() {
     const { user } = useCounterStore((state) => state);
-    const [claimStatus, setClaimStatus] = useState<string | null>(null); // Track claim status (success, error, or null)
+    const [challengeStartTime, setChallengeStartTime] = useState<string>('Tomorrow 6:00am'); // Default value
+
+    useEffect(() => {
+        // Fetch challenge data, including the start time
+        const requestOptions: RequestInit = {
+            method: "POST",
+            redirect: "follow"
+        };
+
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${1}`, requestOptions)  // Use dynamic user ID
+            .then((response) => response.json())
+            .then((result) => {
+                if (result.error) {
+                    toast.error(result.error);
+                    // Convert the start_time to local time and format it
+                    const startTime = new Date(result.start_time);
+                    const formattedTime = format(startTime, 'PPPPp');  // Customize format as needed (e.g., "Tomorrow h:mma")
+                    setChallengeStartTime(formattedTime);  // Update state with formatted time
+                } else {
+                    toast(result.message)
+                }
+            })
+            .catch((error) => {
+                toast.error(error.message);
+            });
+    }, []);
 
     const onClaim = () => {
         const requestOptions: RequestInit = {
             method: "POST",
             redirect: "follow"
         };
-        
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${user?.id}`, requestOptions)  // Use dynamic user ID
+
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${1}`, requestOptions)  // Use dynamic user ID
             .then((response) => response.json())
             .then((result) => {
-                console.log(result);
-                setClaimStatus('success'); // Set status as success on successful claim
+                result.error ? toast.error(result.error) : toast.success(result.message);
             })
             .catch((error) => {
-                console.error(error);
-                setClaimStatus('error'); // Set status as error on failure
+                toast.error(error.message);
             });
     };
 
@@ -44,16 +69,13 @@ export default function Dashboard() {
             <Flex flexDir='column' bg='purple.500' style={{ borderRadius: 16, padding: "16px 24px", gap: 8, alignItems: 'center' }}>
                 <Flex gap={1}>
                     <Image src='./assets/svgs/time.svg' />
-                    <Text color='#A0A0A0AA' fontSize='xs'>Tomorrow 6:00am</Text>
+                    <Text color='#A0A0A0AA' fontSize='xs'>{challengeStartTime}</Text>
                 </Flex>
                 <Text fontWeight={600} fontSize='2xl'>Rise Up Challenge</Text>
                 <Text fontSize='md' style={{ textAlign: 'center' }}>Be amongst the first 1,000 lifers to wake up at 6am and claim 500,000 lifecion.</Text>
                 <Text color='red' fontSize='xs'>Challenge lasts for 3 minutes only</Text>
                 <Button style={{ borderRadius: 8 }} onClick={onClaim}>Claim</Button>
             </Flex>
-            
-            {claimStatus === 'success' && <Text color="green" fontSize="md">Claim successful!</Text>}
-            {claimStatus === 'error' && <Text color="red" fontSize="md">Claim failed. Please try again later.</Text>}
         </>
     )
 }
