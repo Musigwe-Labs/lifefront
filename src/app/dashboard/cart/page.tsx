@@ -1,12 +1,16 @@
 "use client"
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { Sheet } from 'react-modal-sheet';
 import { toast } from 'react-toastify';
 
 export default function Dashboard() {
     const [charities, setCharities] = useState<any[]>()
     const [investments, setInvestments] = useState<any[]>()
+    const [investmentId, setInvestmentId] = useState(0)
     const [screen, setScreen] = useState<"investment" | "charity" | "p2p">("charity")
+    const [sheetSnap, setSheetSnap] = useState(1)
+    const [selectedTasks, setSelectedTasks] = useState<number>();
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/charities`)
@@ -32,20 +36,48 @@ export default function Dashboard() {
             .catch((error) => toast.error(error.error));
     }
 
-    const invest = (investment_id: number) => {
+    const proceedInvestment = (investment_id: number, amount: number) => {
         const requestOptions: RequestInit = {
             method: "POST",
             redirect: "follow"
-          };
+        };
 
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-invests/?user_id=1&investment_id=${investment_id}&invested_amount=3006`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-invests/?user_id=1&investment_id=${investment_id}&invested_amount=${amount}`, requestOptions)
             .then((response) => response.json())
             .then((result) => result.error ? toast.error(result.error) : toast(result.message))
             .catch((error) => toast.error(error.error));
+
+        setSheetSnap(1)
     }
 
     return (
         <>
+            <Sheet isOpen={true}
+                snapPoints={[400, 0]}
+                initialSnap={sheetSnap}
+            >
+                <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
+                    <Sheet.Header />
+                    <Sheet.Content style={{ textAlign: 'center' }}>
+                        <Text>Amount to invest</Text>
+                        <Flex style={{ flexWrap: 'wrap', justifyContent: 'space-between', gap: 8, marginTop: 24 }}>
+                            {
+                                [500, 1000, 2000, 3000, 4000].map((task) => (
+                                    <Button
+                                        style={{ width: "48%", backgroundColor: selectedTasks === task ? 'green' : '' }}
+                                        key={task}
+                                        onClick={() => setSelectedTasks(task)}
+                                    >
+                                        {task}
+                                    </Button>
+                                ))
+                            }
+                        </Flex>
+                        <Button onClick={() => proceedInvestment(investmentId, selectedTasks)} style={{ marginTop: "24px" }}>Process with investment</Button>
+                    </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop />
+            </Sheet>
             {/* <Flex justifyContent='center' style={{ flex: 1, marginTop: 50, marginBottom: 34 }}>
                 <Flex style={{ position: 'relative', width: 240, height: 222, alignItems: 'center', justifyContent: 'center' }}>
                     <Image src='../assets/svgs/dashboard.svg' style={{ position: 'absolute', zIndex: 1, height: '100%', width: '100%' }} />
@@ -82,7 +114,10 @@ export default function Dashboard() {
                 {investments?.map((investment, idx) => <Flex key={idx} style={{ flexDirection: 'column', background: '#1E0C2F', padding: '40px 16px 16px 16px', gap: 8, width: '34%', marginTop: "24px" }}>
                     <Image src='../assets/svgs/invest.svg' style={{ width: 30, }} />
                     <Text fontWeight={600} fontSize='md' lineHeight="20px">{investment.name}</Text>
-                    <Button onClick={() => invest(investment.id)} variant="clear" fontWeight={600} fontSize='md' lineHeight="20px" style={{color: 'white', padding: 0, width: 'auto', height: 'auto', justifyContent: 'flex-start', textDecoration: 'underline'}}>Invest</Button>
+                    <Button onClick={() => {
+                        setInvestmentId(investment.id)
+                        setSheetSnap(0)
+                    }} variant="clear" fontWeight={600} fontSize='md' lineHeight="20px" style={{ color: 'white', padding: 0, width: 'auto', height: 'auto', justifyContent: 'flex-start', textDecoration: 'underline' }}>Invest</Button>
                 </Flex>)}
             </Flex>}
             {screen === "p2p" && <Text fontWeight={600} fontSize='xl' lineHeight="20px" textAlign='center' marginTop='24px'>Coming soon!!!</Text>}
