@@ -1,12 +1,14 @@
 "use client"
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { Button, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
 import { useCounterStore } from '../../../counterStoreProvider';
 import { formatBalance } from '@/constants/utils/formatBalance';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';  // For formatting the date/time
+import { Sheet } from 'react-modal-sheet';
 
 export default function Dashboard() {
+    const [sheetVisible, setSheetVisible] = useState(true)
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
 
@@ -29,6 +31,20 @@ export default function Dashboard() {
                 toast.error(error.message);
             });
     };
+
+    const joinTelegram = () => {
+        const requestOptions: RequestInit = {
+            method: "GET",
+            redirect: "follow"
+          };
+          
+          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=1`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => toast("Join telegram successfully"))
+            .catch((error) => toast.error(error));
+
+        setSheetVisible(false);  // Close the sheet after joining telegram
+    }
 
     return (
         <>
@@ -55,6 +71,24 @@ export default function Dashboard() {
                 <Text color='red' fontSize='xs'>Challenge lasts for 3 minutes only</Text>
                 <Button style={{ borderRadius: 8 }} onClick={onClaim}>Claim</Button>
             </Flex>
+
+            <Sheet isOpen={sheetVisible} onClose={() => setSheetVisible(false)}  // Set the sheet to close when the user clicks outside
+                snapPoints={[400]}
+                initialSnap={1}
+            >
+                <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
+                    <Sheet.Header />
+                    <Sheet.Content style={{ textAlign: 'center' }}>
+                        <Flex style={{justifyContent: 'center'}}>
+                            <Image src='./assets/svgs/telegram.svg' style={{ width: '100px' }} />
+                        </Flex>
+                        <Text fontWeight={600} fontSize='2xl'>Join our telegram</Text>
+                        <Text style={{ marginTop: '16px', marginBottom: '16px' }}>Join our telegram channel  to begin your LIFE tasks</Text>
+                        <Button onClick={joinTelegram}>Join</Button>
+                    </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop />
+            </Sheet>
         </>
     )
 }
