@@ -2,6 +2,7 @@
 import { convertTimeFormat } from '@/constants/utils/convertTimeFormat';
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function Tasks() {
     const [tasks, setTasks] = useState<any[]>([]);
@@ -48,8 +49,10 @@ export default function Tasks() {
           };
           
           fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/start/?user_id=1&activity_id=${taskId}`, requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
+            .then((response) => response.json())
+            .then((result) => {
+                toast(result.message);
+            })
             .catch((error) => console.error(error));
         // You can add additional logic here, such as API calls to claim the reward
     };

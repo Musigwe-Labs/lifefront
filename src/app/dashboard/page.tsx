@@ -8,32 +8,7 @@ import { format } from 'date-fns';  // For formatting the date/time
 
 export default function Dashboard() {
     const { user } = useCounterStore((state) => state);
-    const [challengeStartTime, setChallengeStartTime] = useState<string>('Tomorrow 6:00am'); // Default value
-
-    useEffect(() => {
-        // Fetch challenge data, including the start time
-        const requestOptions: RequestInit = {
-            method: "POST",
-            redirect: "follow"
-        };
-
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${1}`, requestOptions)  // Use dynamic user ID
-            .then((response) => response.json())
-            .then((result) => {
-                if (result.error) {
-                    toast.error(result.error);
-                    // Convert the start_time to local time and format it
-                    const startTime = new Date(result.start_time);
-                    const formattedTime = format(startTime, 'PPPPp');  // Customize format as needed (e.g., "Tomorrow h:mma")
-                    setChallengeStartTime(formattedTime);  // Update state with formatted time
-                } else {
-                    toast(result.message)
-                }
-            })
-            .catch((error) => {
-                toast.error(error.message);
-            });
-    }, []);
+    const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
 
     const onClaim = () => {
         const requestOptions: RequestInit = {
@@ -45,6 +20,10 @@ export default function Dashboard() {
             .then((response) => response.json())
             .then((result) => {
                 result.error ? toast.error(result.error) : toast.success(result.message);
+                // Convert the start_time to local time and format it
+                const startTime = new Date(result.start_time);
+                const formattedTime = format(startTime, 'PPPPp');  // Customize format as needed (e.g., "Tomorrow h:mma")
+                setChallengeStartTime(formattedTime);  // Update state with formatted time
             })
             .catch((error) => {
                 toast.error(error.message);

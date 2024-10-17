@@ -2,6 +2,7 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface Task {
     id: number;
@@ -52,6 +53,7 @@ export default function Life() {
             .then((response) => response.json())
             .then((result) => {
                 console.log(result);
+                toast(result.message)
                 router.push('/dashboard'); // Redirect after successful submission
             })
             .catch((error) => console.error(error));
