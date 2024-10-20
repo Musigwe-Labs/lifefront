@@ -8,6 +8,7 @@ import { CounterStoreProvider } from "../../counterStoreProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
+import { Suspense } from "react";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -34,14 +35,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <TonConnectUIProvider manifestUrl="http://localhost:3000" >
-          <CounterStoreProvider>
-            <ChakraProvider theme={theme}>
-              <Flex padding={"0 32px"} style={{ height: '100vh' }}>
-                {children}
-              </Flex>
-              <ToastContainer />
-            </ChakraProvider>
-          </CounterStoreProvider>
+          <Suspense>
+            <CounterStoreProvider>
+              <ChakraProvider theme={theme}>
+                <Flex padding={"0 32px"} style={{ height: '100vh' }}>
+                  {children}
+                </Flex>
+                <ToastContainer />
+              </ChakraProvider>
+            </CounterStoreProvider>
+          </Suspense>
         </TonConnectUIProvider>
       </body>
     </html>
