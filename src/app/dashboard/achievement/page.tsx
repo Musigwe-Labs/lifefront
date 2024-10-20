@@ -26,12 +26,8 @@ export default function Achievement() {
     }, [])
 
     const handleUpgrade = (level) => {
-        const requestOptions = {
-            method: "GET",
-            redirect: "follow"
-        };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-upgrade-level-stars/?level_id=${level.level_id}`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-upgrade-level-stars/?level_id=${level.level_id}`)
             .then((response) => response.json())
             .then((result) => {
                 setLevel({ ...level, ...result })
