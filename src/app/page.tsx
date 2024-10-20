@@ -1,5 +1,5 @@
 'use client'
-import { redirect, useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams,  } from 'next/navigation'
 
 export default function Profile() {
     const searchParams = useSearchParams()
