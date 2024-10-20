@@ -53,6 +53,7 @@ export default function Dashboard() {
     return (
         <>
             <Sheet isOpen={true}
+                onClose={() => console.log('closed')}
                 snapPoints={[400, 0]}
                 initialSnap={sheetSnap}
             >
@@ -73,7 +74,7 @@ export default function Dashboard() {
                                 ))
                             }
                         </Flex>
-                        <Button onClick={() => proceedInvestment(investmentId, selectedTasks)} style={{ marginTop: "24px" }}>Process with investment</Button>
+                        <Button onClick={() => proceedInvestment(investmentId, selectedTasks as number)} style={{ marginTop: "24px" }}>Process with investment</Button>
                     </Sheet.Content>
                 </Sheet.Container>
                 <Sheet.Backdrop />
