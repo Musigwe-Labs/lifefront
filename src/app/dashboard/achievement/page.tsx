@@ -1,7 +1,7 @@
 "use client"
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 import { Sheet } from 'react-modal-sheet';
 import { useCounterStore } from '../../../../counterStoreProvider';
 
@@ -11,23 +11,17 @@ export default function Achievement() {
     const searchParams = useSearchParams()
     const userId = searchParams.get('user_id')
     const [levels, setLevels] = useState<any>()
-    const [level, setLevel] = useState()
+    const [level, setLevel] = useState<{ level_id: any; level_name: any; daily_task_limit: any; STARS: any; purchase_level_link: any }>()
 
     useEffect(() => {
-        const requestOptions = {
-            method: "GET",
-            redirect: "follow"
-        };
-
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-levels/?user_id=${userId}`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-levels/?user_id=${userId}`)
             .then((response) => response.json())
             .then((result) => setLevels(result))
             .catch((error) => console.error(error));
     }, [])
 
-    const handleUpgrade = (level) => {
-
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-upgrade-level-stars/?level_id=${level.level_id}`)
+    const handleUpgrade = (level: any) => {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-upgrade-level-stars/?level_id=${level?.level_id}`)
             .then((response) => response.json())
             .then((result) => {
                 setLevel({ ...level, ...result })
@@ -49,13 +43,13 @@ export default function Achievement() {
             </Flex>
             <Flex style={{ flexWrap: 'wrap', gap: 24, marginTop: 24 }}>
                 {
-                    levels?.other_levels && levels?.other_levels?.map((level, index) => (
+                    levels?.other_levels && levels?.other_levels?.map((level: { level_id: any; level_name: any; daily_task_limit: any; }, index: Key | null | undefined) => (
                         <Flex key={index} style={{ flexDirection: 'column', alignItems: 'center', maxWidth: '30%', textAlign: 'center' }} onClick={() => handleUpgrade(level)}>
-                            <Flex style={{ width: 100, height: 100, borderColor: "white", borderWidth: "4px", borderRadius: 90, alignItems: 'center', justifyContent: 'center', background: level.level_id !== levels.current_level.level_id ? "black" : "url('../assets/level2.png')" }}>
-                                {level.level_id !== levels.current_level.level_id && <Image src='../assets/svgs/padlock.svg' />}
+                            <Flex style={{ width: 100, height: 100, borderColor: "white", borderWidth: "4px", borderRadius: 90, alignItems: 'center', justifyContent: 'center', background: level?.level_id !== levels.current_level?.level_id ? "black" : "url('../assets/level2.png')" }}>
+                                {level?.level_id !== levels.current_level?.level_id && <Image src='../assets/svgs/padlock.svg' />}
                             </Flex>
-                            <Text>{`Level ${level.level_id}`}</Text>
-                            <Text>{`${level.level_name}(${level.daily_task_limit} tasks)`}</Text>
+                            <Text>{`Level ${level?.level_id}`}</Text>
+                            <Text>{`${level?.level_name}(${level?.daily_task_limit} tasks)`}</Text>
                         </Flex>
                     )
                     )
