@@ -6,12 +6,15 @@ import { useEffect, useState } from 'react';
 import { Sheet } from 'react-modal-sheet';
 import { toast } from 'react-toastify';
 import { useCounterStore } from '../../../counterStoreProvider';
+import { useSearchParams } from 'next/navigation';
 
 export default function Dashboard() {
     const [sheetVisible, setSheetVisible] = useState(true)
     const [snap, setSnap] = useState(1)
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
+    const searchParams = useSearchParams()
+    const userId = searchParams.get('user_id')
 
     useEffect(() => {
         const requestOptions: RequestInit = {
@@ -19,7 +22,7 @@ export default function Dashboard() {
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=1`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=${userId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => !result.joined_tg && setSnap(0))
             .catch((error) => toast.error(error));
@@ -32,7 +35,7 @@ export default function Dashboard() {
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${1}`, requestOptions)  // Use dynamic user ID
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${userId}`, requestOptions)  // Use dynamic user ID
             .then((response) => response.json())
             .then((result) => {
                 result.error ? toast.error(result.error) : toast.success(result.message);

@@ -1,6 +1,6 @@
 'use client';
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { useCounterStore } from '../../../counterStoreProvider';
 import { useTonConnectUI } from '@tonconnect/ui-react';
@@ -10,6 +10,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const router = useRouter()
     const [tonConnectUI, setOptions] = useTonConnectUI()
     const { setUser, user } = useCounterStore((state) => state)
+    const searchParams = useSearchParams()
+    const userId = searchParams.get('user_id')
 
     useEffect(() => {
         const requestOptions: RequestInit = {
@@ -17,7 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/?user_id=1`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/?user_id=${userId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => setUser(result))
             .catch((error) => console.error(error));
@@ -30,10 +32,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Flex bg='black' style={{ width: 40, height: 40, borderRadius: 30, alignItems: 'center', justifyContent: 'center' }}>
                         <Text>{user?.tg_username}</Text>
                     </Flex>
-                    <Flex bg='black.200' style={{ borderRadius: 30, padding: "0 16px", gap: 8, alignItems: 'center', justifyContent: 'center' }}>
+                    {/* <Flex bg='black.200' style={{ borderRadius: 30, padding: "0 16px", gap: 8, alignItems: 'center', justifyContent: 'center' }}>
                         <Image src='../assets/svgs/fire.svg' />
                         <Text>{user?.referral_count} day</Text>
-                    </Flex>
+                    </Flex> */}
                 </Flex>
                 <Flex>
                     <Button onClick={() => tonConnectUI.openModal()} size='md' leftIcon={<Image src='../assets/svgs/wallet.svg' />}>Connect Wallet</Button>

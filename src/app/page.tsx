@@ -1,5 +1,8 @@
-import { redirect } from 'next/navigation'
+'use client'
+import { redirect, useSearchParams } from 'next/navigation'
 
 export default function Profile() {
-    redirect('/splash')
+    const searchParams = useSearchParams()
+    const userId = searchParams.get('user_id')
+    redirect('/splash?user_id=' + userId)
 }
