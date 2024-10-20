@@ -1,16 +1,30 @@
 "use client"
-import { Button, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
-import { useCounterStore } from '../../../counterStoreProvider';
 import { formatBalance } from '@/constants/utils/formatBalance';
+import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { format } from 'date-fns'; // For formatting the date/time
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { format } from 'date-fns';  // For formatting the date/time
 import { Sheet } from 'react-modal-sheet';
+import { toast } from 'react-toastify';
+import { useCounterStore } from '../../../counterStoreProvider';
 
 export default function Dashboard() {
     const [sheetVisible, setSheetVisible] = useState(true)
+    const [snap, setSnap] = useState(1)
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
+
+    useEffect(() => {
+        const requestOptions: RequestInit = {
+            method: "GET",
+            redirect: "follow"
+        };
+
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=1`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => !result.joined_tg && setSnap(0))
+            .catch((error) => toast.error(error));
+    }, [])
+
 
     const onClaim = () => {
         const requestOptions: RequestInit = {
@@ -33,17 +47,7 @@ export default function Dashboard() {
     };
 
     const joinTelegram = () => {
-        const requestOptions: RequestInit = {
-            method: "GET",
-            redirect: "follow"
-          };
-          
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=1`, requestOptions)
-            .then((response) => response.json())
-            .then((result) => toast("Join telegram successfully"))
-            .catch((error) => toast.error(error));
-
-        setSheetVisible(false);  // Close the sheet after joining telegram
+        window.location.href = "https://t.me/lifeonton_community";  // Redirect to the telegram link
     }
 
     return (
@@ -73,13 +77,13 @@ export default function Dashboard() {
             </Flex>
 
             <Sheet isOpen={sheetVisible} onClose={() => setSheetVisible(false)}  // Set the sheet to close when the user clicks outside
-                snapPoints={[400]}
-                initialSnap={1}
+                snapPoints={[400, 0]}
+                initialSnap={snap}
             >
                 <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
                     <Sheet.Header />
                     <Sheet.Content style={{ textAlign: 'center' }}>
-                        <Flex style={{justifyContent: 'center'}}>
+                        <Flex style={{ justifyContent: 'center' }}>
                             <Image src='./assets/svgs/telegram.svg' style={{ width: '100px' }} />
                         </Flex>
                         <Text fontWeight={600} fontSize='2xl'>Join our telegram</Text>

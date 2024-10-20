@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { useCounterStore } from '../../../counterStoreProvider';
 import { useTonConnectUI } from '@tonconnect/ui-react';
+import Link from 'next/link';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter()
@@ -41,7 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Flex style={{ justifyContent: 'space-between', alignItems: 'center', padding: "16px 0" }}>
                 <Flex bg='black.200' style={{ borderRadius: 30, padding: "0 16px", gap: 8, alignItems: 'center', justifyContent: 'center' }}>
                     <Image src='../assets/svgs/medal.svg' />
-                    <Text>Achievements</Text>
+                    <Link href="/dashboard/achievement" style={{color: 'white'}}>Achievements</Link>
                 </Flex>
                 <Flex bg='black.200' style={{ borderRadius: 30, padding: "0 16px", gap: 8, alignItems: 'center', justifyContent: 'center' }}>
                     <Image src='../assets/svgs/ticket.svg' />
