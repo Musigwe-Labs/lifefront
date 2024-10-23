@@ -2,32 +2,16 @@
 import { formatBalance } from '@/constants/utils/formatBalance';
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { format } from 'date-fns'; // For formatting the date/time
-import { useEffect, useState } from 'react';
-import { Sheet } from 'react-modal-sheet';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCounterStore } from '../../../counterStoreProvider';
-import { useSearchParams } from 'next/navigation';
 
 export default function Dashboard() {
-    const [sheetVisible, setSheetVisible] = useState(true)
-    const [snap, setSnap] = useState(1)
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
     const searchParams = useSearchParams()
     const userId = searchParams.get('user_id')
-
-    useEffect(() => {
-        const requestOptions: RequestInit = {
-            method: "GET",
-            redirect: "follow"
-        };
-
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=${userId}`, requestOptions)
-            .then((response) => response.json())
-            .then((result) => !result.joined_tg && setSnap(0))
-            .catch((error) => toast.error(error));
-    }, [])
-
 
     const onClaim = () => {
         const requestOptions: RequestInit = {
@@ -48,10 +32,6 @@ export default function Dashboard() {
                 toast.error(error.message);
             });
     };
-
-    const joinTelegram = () => {
-        window.location.href = "https://t.me/lifeonton_community";  // Redirect to the telegram link
-    }
 
     return (
         <>
@@ -78,24 +58,6 @@ export default function Dashboard() {
                 <Text color='red' fontSize='xs'>Challenge lasts for 3 minutes only</Text>
                 <Button style={{ borderRadius: 8 }} onClick={onClaim}>Claim</Button>
             </Flex>
-
-            <Sheet isOpen={sheetVisible} onClose={() => setSheetVisible(false)}  // Set the sheet to close when the user clicks outside
-                snapPoints={[400, 0]}
-                initialSnap={snap}
-            >
-                <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
-                    <Sheet.Header />
-                    <Sheet.Content style={{ textAlign: 'center' }}>
-                        <Flex style={{ justifyContent: 'center' }}>
-                            <Image src='./assets/svgs/telegram.svg' style={{ width: '100px' }} />
-                        </Flex>
-                        <Text fontWeight={600} fontSize='2xl'>Join our telegram</Text>
-                        <Text style={{ marginTop: '16px', marginBottom: '16px' }}>Join our telegram channel  to begin your LIFE tasks</Text>
-                        <Button onClick={joinTelegram}>Join</Button>
-                    </Sheet.Content>
-                </Sheet.Container>
-                <Sheet.Backdrop />
-            </Sheet>
         </>
     )
 }
