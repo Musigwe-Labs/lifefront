@@ -32,10 +32,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 
     const joinTelegram = () => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=${userId}`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join_tg/?user_id=${userId}`, {method: "POST"})
         .then((response) => response.json())
         .then((result) => console.log(result))
         .catch((error) => console.error(error));
+        setSnap(1)
         window.location.href = "https://t.me/lifeonton_community";  // Redirect to the telegram link
     }
 
@@ -82,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 initialSnap={snap}
             >
                 <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
-                    <Sheet.Header />
+                    {/* <Sheet.Header /> */}
                     <Sheet.Content style={{ textAlign: 'center' }}>
                         <Flex style={{ justifyContent: 'center' }}>
                             <Image src='./assets/svgs/telegram.svg' style={{ width: '100px' }} />

@@ -33,6 +33,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <script src="https://telegram.org/js/telegram-web-app.js"></script>
+      <script src="https://richinfo.co/richpartners/telegram/js/rp-ob.js?pub_id=944847&widget_id=352700" async data-cfasync="false"></script>
       <body>
         <TonConnectUIProvider manifestUrl="http://localhost:3000" >
           <Suspense>
