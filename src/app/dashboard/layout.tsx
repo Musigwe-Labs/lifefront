@@ -12,8 +12,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const [snap, setSnap] = useState(1)
     const [tonConnectUI, setOptions] = useTonConnectUI()
     const { setUser, user } = useCounterStore((state) => state)
-    const searchParams = useSearchParams()
-    const userId = searchParams.get('user_id')
+    const userId = localStorage.getItem('user_id')
 
     useEffect(() => {
         const requestOptions: RequestInit = {
@@ -60,7 +59,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Flex style={{ justifyContent: 'space-between', alignItems: 'center', padding: "16px 0" }}>
                     <Flex bg='black.200' style={{ borderRadius: 30, padding: "0 16px", gap: 8, alignItems: 'center', justifyContent: 'center' }}>
                         <Image src='../assets/svgs/medal.svg' />
-                        <Link href={`/dashboard/achievement?user_id=${userId}`} style={{ color: 'white' }}>Achievements</Link>
+                        <Link href={`/dashboard/achievement`} style={{ color: 'white' }}>Achievements</Link>
                     </Flex>
                     <Flex bg='black.200' style={{ borderRadius: 30, padding: "0 16px", gap: 8, alignItems: 'center', justifyContent: 'center' }}>
                         <Image src='../assets/svgs/ticket.svg' />

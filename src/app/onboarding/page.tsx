@@ -1,12 +1,10 @@
 'use client';
-import { Box, Button, Flex, Image, Text, useTheme } from '@chakra-ui/react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React from 'react'
+import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
 
 export default function Onboarding() {
     const router = useRouter()
-    const searchParams = useSearchParams()
-    const userId = searchParams.get('user_id')
+    const userId = localStorage.getItem('user_id')
     return (
         <Flex flex={1} flexDir={'column'} alignItems={'center'} justifyContent={'flex-end'} gap={8} paddingBottom={20}>
             <Flex style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -20,7 +18,7 @@ export default function Onboarding() {
                 <Box bg={'purple.300'} style={{ width: 10, height: 10, borderRadius: 8 }}></Box>
             </Flex>
             <Text textAlign={{ md: 'initial', base: 'center' }} fontWeight={400} >Turn Your Daily Routine into Rewards!</Text>
-            <Button onClick={() => router.push('/dashboard?user_id='+userId)}>Get Started</Button>
+            <Button onClick={() => router.push('/dashboard')}>Get Started</Button>
         </Flex>
     )
 }

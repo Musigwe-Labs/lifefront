@@ -2,7 +2,6 @@
 import { formatBalance } from '@/constants/utils/formatBalance';
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { format } from 'date-fns'; // For formatting the date/time
-import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCounterStore } from '../../../counterStoreProvider';
@@ -10,8 +9,7 @@ import { useCounterStore } from '../../../counterStoreProvider';
 export default function Dashboard() {
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
-    const searchParams = useSearchParams()
-    const userId = searchParams.get('user_id')
+    const userId = localStorage.getItem('user_id')
 
     const onClaim = () => {
         const requestOptions: RequestInit = {

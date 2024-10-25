@@ -1,6 +1,5 @@
 "use client"
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
-import { useSearchParams } from 'next/navigation';
 import { Key, useEffect, useState } from 'react';
 import { Sheet } from 'react-modal-sheet';
 import { useCounterStore } from '../../../../counterStoreProvider';
@@ -8,8 +7,7 @@ import { useCounterStore } from '../../../../counterStoreProvider';
 export default function Achievement() {
     const { user } = useCounterStore((state) => state)
     const [snap, setSnap] = useState(1)
-    const searchParams = useSearchParams()
-    const userId = searchParams.get('user_id')
+    const userId = localStorage.getItem('user_id')
     const [levels, setLevels] = useState<any>()
     const [level, setLevel] = useState<{ level_id: any; level_name: any; daily_task_limit: any; STARS: any; purchase_level_link: any }>()
 

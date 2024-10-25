@@ -1,13 +1,11 @@
 'use client';
 import { Flex, Image, Text } from '@chakra-ui/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function Splash() {
     const router = useRouter()
-    const searchParams = useSearchParams()
-    const userId = searchParams.get('user_id')
     setTimeout(() => {
-        router.push('/onboarding?user_id=' + userId)
+        router.push('/onboarding');
         console.log('redirected');
     }, 1000);
 

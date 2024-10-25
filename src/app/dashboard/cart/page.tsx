@@ -8,9 +8,12 @@ export default function Dashboard() {
     const [charities, setCharities] = useState<any[]>()
     const [investments, setInvestments] = useState<any[]>()
     const [investmentId, setInvestmentId] = useState(0)
+    const [charityId, setCharityId] = useState(0)
     const [screen, setScreen] = useState<"investment" | "charity" | "p2p">("charity")
     const [sheetSnap, setSheetSnap] = useState(1)
     const [selectedTasks, setSelectedTasks] = useState<number>();
+    // const userId = typeof window !== "undefined" && localStorage.getItem('user_id')
+    const userId = 1
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/charities`)
@@ -30,9 +33,9 @@ export default function Dashboard() {
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/donate/?user_id=1&charity_id=${charity_id}&amount=${amount}`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/donate/?user_id=${userId}&charity_id=${charityId}&amount=${amount}`, requestOptions)
             .then((response) => response.json())
-            .then((result) => toast.error(result.error))
+            .then((result) => toast(result.status))
             .catch((error) => toast.error(error.error));
     }
 
@@ -42,7 +45,7 @@ export default function Dashboard() {
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-invests/?user_id=1&investment_id=${investment_id}&invested_amount=${amount}`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-invests/?user_id=${userId}&investment_id=${investment_id}&invested_amount=${amount}`, requestOptions)
             .then((response) => response.json())
             .then((result) => result.error ? toast.error(result.error) : toast(result.message))
             .catch((error) => toast.error(error.error));
@@ -52,33 +55,6 @@ export default function Dashboard() {
 
     return (
         <>
-            <Sheet isOpen={true}
-                onClose={() => console.log('closed')}
-                snapPoints={[400, 0]}
-                initialSnap={sheetSnap}
-            >
-                <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
-                    <Sheet.Header />
-                    <Sheet.Content style={{ textAlign: 'center' }}>
-                        <Text>Amount to invest</Text>
-                        <Flex style={{ flexWrap: 'wrap', justifyContent: 'space-between', gap: 8, marginTop: 24 }}>
-                            {
-                                [500, 1000, 2000, 3000, 4000].map((task) => (
-                                    <Button
-                                        style={{ width: "48%", backgroundColor: selectedTasks === task ? 'green' : '' }}
-                                        key={task}
-                                        onClick={() => setSelectedTasks(task)}
-                                    >
-                                        {task}
-                                    </Button>
-                                ))
-                            }
-                        </Flex>
-                        <Button onClick={() => proceedInvestment(investmentId, selectedTasks as number)} style={{ marginTop: "24px" }}>Process with investment</Button>
-                    </Sheet.Content>
-                </Sheet.Container>
-                <Sheet.Backdrop />
-            </Sheet>
             {/* <Flex justifyContent='center' style={{ flex: 1, marginTop: 50, marginBottom: 34 }}>
                 <Flex style={{ position: 'relative', width: 240, height: 222, alignItems: 'center', justifyContent: 'center' }}>
                     <Image src='../assets/svgs/dashboard.svg' style={{ position: 'absolute', zIndex: 1, height: '100%', width: '100%' }} />
@@ -108,13 +84,19 @@ export default function Dashboard() {
                 {charities?.map((charity, idx) => <Flex key={idx} bgSize='cover' bgImage="url('../assets/donate1.png')" style={{ flexDirection: 'column', width: '49%', padding: "100px 16px 16px 16px", marginTop: '24px', borderRadius: 16 }} >
                     <Text fontWeight={600} fontSize='md' lineHeight="20px">{charity.name}</Text>
                     <Text fontSize='xs' color='#FFF176' >Total Amount Donated: {charity.amount_donated}</Text>
-                    <Button size='sm' onClick={() => donateClick(charity.id, charity.amount_donated)}>Donate now</Button>
+                    <Button size='sm' onClick={() => {
+                        setCharityId(charity.id)
+                        setSheetSnap(0)
+                    }}>Donate now</Button>
                 </Flex>)}
             </Flex>}
             {screen === "investment" && <Flex style={{ flexWrap: 'wrap', gap: 8 }}>
                 {investments?.map((investment, idx) => <Flex key={idx} style={{ flexDirection: 'column', background: '#1E0C2F', padding: '40px 16px 16px 16px', gap: 8, width: '34%', marginTop: "24px" }}>
                     <Image src='../assets/svgs/invest.svg' style={{ width: 30, }} />
-                    <Text fontWeight={600} fontSize='md' lineHeight="20px">{investment.name}</Text>
+                    <Flex style={{flexDirection: 'row', gap: 3}}>
+                        <Text fontWeight={600} fontSize='md' lineHeight="20px">{investment.name}</Text>
+                        {investment.is_invested && <Image src='../assets/svgs/medal.svg' style={{ width: 20, }} />}
+                    </Flex>
                     <Button onClick={() => {
                         setInvestmentId(investment.id)
                         setSheetSnap(0)
@@ -122,6 +104,35 @@ export default function Dashboard() {
                 </Flex>)}
             </Flex>}
             {screen === "p2p" && <Text fontWeight={600} fontSize='xl' lineHeight="20px" textAlign='center' marginTop='24px'>Coming soon!!!</Text>}
+
+            <Sheet isOpen={true}
+                onClose={() => setSheetSnap(1)}
+                snapPoints={[400, 0]}
+                initialSnap={sheetSnap}
+            >
+                <Sheet.Container style={{ backgroundColor: '#0F021D' }}>
+                    <Sheet.Header />
+                    <Sheet.Content style={{ textAlign: 'center' }}>
+                        <Text>Amount to invest</Text>
+                        <Flex style={{ flexWrap: 'wrap', justifyContent: 'space-between', gap: 8, marginTop: 24 }}>
+                            {
+                                [3000, 4000, 5000, 10000, 20000].map((task) => (
+                                    <Button
+                                        style={{ width: "48%", backgroundColor: selectedTasks === task ? 'green' : '' }}
+                                        key={task}
+                                        onClick={() => setSelectedTasks(task)}
+                                    >
+                                        {task}
+                                    </Button>
+                                ))
+                            }
+                        </Flex>
+                        {screen === "investment" && <Button onClick={() => proceedInvestment(investmentId, selectedTasks as number)} style={{ marginTop: "24px" }}>Process with investment</Button>}
+                        {screen === "charity" && <Button onClick={() => donateClick(charityId, selectedTasks as number)} style={{ marginTop: "24px" }}>Charity</Button>}
+                    </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop />
+            </Sheet>
         </>
     )
 }
