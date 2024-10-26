@@ -13,6 +13,11 @@ export default function Life() {
     const router = useRouter();
     const [tasks, setTasks] = useState<Task[]>([]);
     const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+    const [userId, setUserId] = useState<string>();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string);
+    }, []);
 
     useEffect(() => {
         const requestOptions: RequestInit = {
@@ -49,7 +54,7 @@ export default function Life() {
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/activities/add/?user_id=1`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/activities/add/?user_id=${userId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 console.log(result);

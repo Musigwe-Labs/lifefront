@@ -7,6 +7,11 @@ import { toast } from 'react-toastify';
 export default function Tasks() {
     const [tasks, setTasks] = useState<any[]>([]);
     const [remainingTimes, setRemainingTimes] = useState<{ [key: string]: number }>({});
+    const [userId, setUserId] = useState<string>();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string);
+    }, []);
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/all-tasks/`)
@@ -48,7 +53,7 @@ export default function Tasks() {
             redirect: "follow"
           };
           
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/start/?user_id=1&activity_id=${taskId}`, requestOptions)
+          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/start/?user_id=${userId}&activity_id=${taskId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 toast(result.message);
