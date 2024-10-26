@@ -5,11 +5,6 @@ import { useEffect, useState } from 'react';
 
 export default function Onboarding() {
     const router = useRouter()
-    const [userId, setUserId] = useState("")
-
-    useEffect(() => {
-        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
-      }, [])
 
     return (
         <Flex flex={1} flexDir={'column'} alignItems={'center'} justifyContent={'flex-end'} gap={8} paddingBottom={20}>

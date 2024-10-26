@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/?user_id=${userId}`, requestOptions)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/?user_id=${window.localStorage.getItem("user_id")}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 setUser(result)

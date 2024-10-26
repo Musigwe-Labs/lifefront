@@ -16,7 +16,7 @@ export default function Achievement() {
       }, [])
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-levels/?user_id=${userId}`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-levels/?user_id=${window.localStorage.getItem("user_id")}`)
             .then((response) => response.json())
             .then((result) => setLevels(result))
             .catch((error) => console.error(error));

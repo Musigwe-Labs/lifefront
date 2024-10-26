@@ -9,11 +9,6 @@ import { useCounterStore } from '../../../counterStoreProvider';
 export default function Dashboard() {
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
-    const [userId, setUserId] = useState("")
-
-    useEffect(() => {
-        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
-      }, [])
 
     const onClaim = () => {
         const requestOptions: RequestInit = {
@@ -21,7 +16,7 @@ export default function Dashboard() {
             redirect: "follow"
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${userId}`, requestOptions)  // Use dynamic user ID
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/join/?user_id=${window.localStorage.getItem("user_id")}`, requestOptions)  // Use dynamic user ID
             .then((response) => response.json())
             .then((result) => {
                 result.error ? toast.error(result.error) : toast.success(result.message);

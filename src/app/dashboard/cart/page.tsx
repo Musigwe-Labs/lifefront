@@ -12,8 +12,11 @@ export default function Dashboard() {
     const [screen, setScreen] = useState<"investment" | "charity" | "p2p">("charity")
     const [sheetSnap, setSheetSnap] = useState(1)
     const [selectedTasks, setSelectedTasks] = useState<number>();
-    // const userId = typeof window !== "undefined" && .getItem('user_id')
-    const userId = 1
+    const [userId, setUserId] = useState<string>()
+    
+    useEffect(() => {
+        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
+      }, [])
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/charities`)
@@ -21,7 +24,7 @@ export default function Dashboard() {
             .then((result) => setCharities(result))
             .catch((error) => console.error(error));
 
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/invests?user_id=1`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/invests?user_id=${window.localStorage.getItem("user_id")}`)
             .then((response) => response.json())
             .then((result) => setInvestments(result))
             .catch((error) => console.error(error));
