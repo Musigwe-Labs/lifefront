@@ -11,8 +11,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const router = useRouter()
     const [snap, setSnap] = useState(1)
     const [tonConnectUI, setOptions] = useTonConnectUI()
+    const [userId, setUserId] = useState("")
     const { setUser, user } = useCounterStore((state) => state)
-    const userId = localStorage.getItem('user_id')
+
+      useEffect(() => {
+        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
+      }, [])
+      
 
     useEffect(() => {
         const requestOptions: RequestInit = {

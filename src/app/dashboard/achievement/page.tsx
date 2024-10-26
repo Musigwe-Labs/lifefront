@@ -7,9 +7,13 @@ import { useCounterStore } from '../../../../counterStoreProvider';
 export default function Achievement() {
     const { user } = useCounterStore((state) => state)
     const [snap, setSnap] = useState(1)
-    const userId = localStorage.getItem('user_id')
+    const [userId, setUserId] = useState("")
     const [levels, setLevels] = useState<any>()
     const [level, setLevel] = useState<{ level_id: any; level_name: any; daily_task_limit: any; STARS: any; purchase_level_link: any }>()
+
+    useEffect(() => {
+        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
+      }, [])
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/user-levels/?user_id=${userId}`)

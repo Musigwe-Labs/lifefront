@@ -12,7 +12,7 @@ export default function Dashboard() {
     const [screen, setScreen] = useState<"investment" | "charity" | "p2p">("charity")
     const [sheetSnap, setSheetSnap] = useState(1)
     const [selectedTasks, setSelectedTasks] = useState<number>();
-    // const userId = typeof window !== "undefined" && localStorage.getItem('user_id')
+    // const userId = typeof window !== "undefined" && .getItem('user_id')
     const userId = 1
 
     useEffect(() => {
@@ -37,6 +37,8 @@ export default function Dashboard() {
             .then((response) => response.json())
             .then((result) => toast(result.status))
             .catch((error) => toast.error(error.error));
+
+        setSheetSnap(1)
     }
 
     const proceedInvestment = (investment_id: number, amount: number) => {
@@ -93,7 +95,7 @@ export default function Dashboard() {
             {screen === "investment" && <Flex style={{ flexWrap: 'wrap', gap: 8 }}>
                 {investments?.map((investment, idx) => <Flex key={idx} style={{ flexDirection: 'column', background: '#1E0C2F', padding: '40px 16px 16px 16px', gap: 8, width: '34%', marginTop: "24px" }}>
                     <Image src='../assets/svgs/invest.svg' style={{ width: 30, }} />
-                    <Flex style={{flexDirection: 'row', gap: 3}}>
+                    <Flex style={{ flexDirection: 'row', gap: 3 }}>
                         <Text fontWeight={600} fontSize='md' lineHeight="20px">{investment.name}</Text>
                         {investment.is_invested && <Image src='../assets/svgs/medal.svg' style={{ width: 20, }} />}
                     </Flex>

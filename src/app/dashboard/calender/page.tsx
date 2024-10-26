@@ -32,7 +32,7 @@ export default function Dashboard() {
                 <Flex flexDir='column' gap={1}>
                     <Text fontWeight={600} fontSize='2xl'>Live your life</Text>
                     <Text fontSize='md' >Complete these objectives and achieve coins</Text>
-                    <Button onClick={() => location.href = "/dashboard/calender/life"} size='md' color='purple.100' style={{ borderRadius: 32, width: '80%', background: 'white' }}>View tasks</Button>
+                    <Button onClick={() => location.href = "/dashboard/calender/life"} size='md' color='purple.100' style={{ borderRadius: 32, width: '80%', background: 'white' }}>Add tasks</Button>
                 </Flex>
                 <Image src='../assets/padlock.png' />
             </Flex>

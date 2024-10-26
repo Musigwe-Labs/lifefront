@@ -2,14 +2,18 @@
 import { formatBalance } from '@/constants/utils/formatBalance';
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { format } from 'date-fns'; // For formatting the date/time
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useCounterStore } from '../../../counterStoreProvider';
 
 export default function Dashboard() {
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
-    const userId = localStorage.getItem('user_id')
+    const [userId, setUserId] = useState("")
+
+    useEffect(() => {
+        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
+      }, [])
 
     const onClaim = () => {
         const requestOptions: RequestInit = {

@@ -1,10 +1,16 @@
 'use client';
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Onboarding() {
     const router = useRouter()
-    const userId = localStorage.getItem('user_id')
+    const [userId, setUserId] = useState("")
+
+    useEffect(() => {
+        if(typeof window !== 'undefined') setUserId(localStorage.getItem('user_id') as string)
+      }, [])
+
     return (
         <Flex flex={1} flexDir={'column'} alignItems={'center'} justifyContent={'flex-end'} gap={8} paddingBottom={20}>
             <Flex style={{ justifyContent: 'center', alignItems: 'center' }}>
