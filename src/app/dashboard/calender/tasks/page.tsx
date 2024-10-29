@@ -14,7 +14,7 @@ export default function Tasks() {
     }, []);
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/all-tasks/`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/incomplete-tasks/?user_id=${window.localStorage.getItem("user_id")}`)
             .then((response) => response.json())
             .then((result) => setTasks(result))
             .catch((error) => console.error(error));
@@ -48,12 +48,12 @@ export default function Tasks() {
     };
 
     const claimReward = (taskId: number) => {
-        const requestOptions:RequestInit = {
+        const requestOptions: RequestInit = {
             method: "POST",
             redirect: "follow"
-          };
-          
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/start/?user_id=${userId}&activity_id=${taskId}`, requestOptions)
+        };
+
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/start/?user_id=${userId}&activity_id=${taskId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 toast(result.message);
@@ -61,6 +61,13 @@ export default function Tasks() {
             .catch((error) => console.error(error));
         // You can add additional logic here, such as API calls to claim the reward
     };
+
+    const getMoreLifeWithCoin = () => {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/convert-life-stars/?stars=200`)
+            .then((response) => response.json())
+            .then((result) => window.location.href = result.purchase_link)
+            .catch((error) => console.error(error));
+    }
 
     return (
         <>
@@ -71,25 +78,25 @@ export default function Tasks() {
             </Flex>
             <Text fontSize='xl' style={{ fontWeight: 700 }}>All tasks</Text>
             {tasks?.map((task) => (
-                <Flex key={task.id} flexDir='row' style={{ borderRadius: 16, border: '1px solid #FFFFFF3D', padding: "16px 24px", marginTop: 16, alignItems: 'center', background: '#C879FF14' }}>
+                <Flex key={task.activity.id} flexDir='row' style={{ borderRadius: 16, border: '1px solid #FFFFFF3D', padding: "16px 24px", marginTop: 16, alignItems: 'center', background: '#C879FF14' }}>
                     <Flex flexDir='column' style={{ width: '70%' }}>
-                        <Text fontWeight={600} fontSize='xl'>{task.name}</Text>
+                        <Text fontWeight={600} fontSize='xl'>{task.activity.name}</Text>
                         <Flex style={{ gap: 4 }}>
                             <Image src='../../assets/svgs/coinn.svg' />
-                            <Text fontSize='sm' fontWeight={600} color="#ECF27D">{task.amount_allocated}</Text>
+                            <Text fontSize='sm' fontWeight={600} color="#ECF27D">{task.activity.amount_allocated}</Text>
                             <Image src='../../assets/svgs/time.svg' />
                             <Text fontSize='sm'>
-                                {convertTimeFormat(task.time_allocated)}
+                                {convertTimeFormat(task.activity.time_allocated)}
                             </Text>
                         </Flex>
                     </Flex>
-                    <Button 
-                        size='xs' 
-                        style={{ width: '30%', height: '100%' }} 
-                        disabled={remainingTimes[task.id] !== undefined ? (remainingTimes[task.id] === 0 ? true : false) : false}
-                        onClick={remainingTimes[task.id] === 0 ? () => console.log("You've added tasks already.") : () => startCountdown(task.id, task.time_allocated)}
+                    <Button
+                        size='xs'
+                        style={{ width: '30%', height: '100%' }}
+                        disabled={remainingTimes[task.activity.id] !== undefined ? (remainingTimes[task.activity.id] === 0 ? true : false) : false}
+                        onClick={remainingTimes[task.activity.id] === 0 ? () => console.log("You've added tasks already.") : () => startCountdown(task.activity.id, task.activity.time_allocated)}
                     >
-                        {remainingTimes[task.id] !== undefined ? (remainingTimes[task.id] === 0 ? "Added" : formatCountdown(remainingTimes[task.id])) : "Go"}
+                        {remainingTimes[task.activity.id] !== undefined ? (remainingTimes[task.activity.id] === 0 ? "Added" : formatCountdown(remainingTimes[task.activity.id])) : "Go"}
                     </Button>
                 </Flex>
             ))}
@@ -112,7 +119,7 @@ export default function Tasks() {
                 <Flex gap={4}>
                     <Image src='../../assets/svgs/tv.svg' />
                     <Flex flexDir='column' style={{}}>
-                        <Text fontWeight={600} fontSize='xl'>Get more life coins</Text>
+                        <Button variant="clear" color="white" paddingLeft={0} fontWeight={600} fontSize='xl' onClick={getMoreLifeWithCoin}>Get more life coins</Button>
                         <Text fontSize='sm'>Get more life coins for 5 stars</Text>
                     </Flex>
                 </Flex>

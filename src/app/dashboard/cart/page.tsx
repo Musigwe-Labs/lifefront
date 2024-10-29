@@ -102,6 +102,9 @@ export default function Dashboard() {
                         <Text fontWeight={600} fontSize='md' lineHeight="20px">{investment.name}</Text>
                         {investment.is_invested && <Image src='../assets/svgs/medal.svg' style={{ width: 20, }} />}
                     </Flex>
+                    <Text>{`ROI: ${investment.roi}`}</Text>
+                    <Text>{`Amount to invest: \n\n ${investment.minimum_investment} - ${investment.maximum_investment}`}</Text>
+                    <Text>{`Maturity date: ${new Date(investment.maturity_date).toDateString()}`}</Text>
                     <Button onClick={() => {
                         setInvestmentId(investment.id)
                         setSheetSnap(0)
