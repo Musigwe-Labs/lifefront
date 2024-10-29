@@ -10,6 +10,14 @@ export default function Dashboard() {
     const { user } = useCounterStore((state) => state);
     const [challengeStartTime, setChallengeStartTime] = useState<string>(); // Default value
 
+    useEffect(() => {
+          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/getjoin/?user_id=${window.localStorage.getItem("user_id")}`)
+            .then((response) => response.json())
+            .then((result) => setChallengeStartTime(format(new Date(result.start_time), 'PPPPp')))
+            .catch((error) => console.error(error));
+    }, [])
+    
+
     const onClaim = () => {
         const requestOptions: RequestInit = {
             method: "POST",
